@@ -48,16 +48,23 @@ function App() {
       <Header />
       <div className="container">
         <h2>{userSubmitSearch}</h2>
-        <div className="form-group">
-          <form onSubmit={handleSubmitSearch}>
+        <form role="search" onSubmit={handleSubmitSearch}>
+          <label htmlFor="search" className="visually-hidden">
+            Search:
             <input
-              type="text"
-              placeholder="search country here..."
+              title="search for a country"
+              aria-label="Enter your search term"
+              id="search"
+              name="search"
+              type="search"
+              placeholder="Search country here..."
               onChange={(e) => setUserSubmitSearch(e.target.value)}
+              required
             />
-            <button type="submit">Submit</button>
-          </form>
-        </div>
+          </label>
+
+          <button type="submit">Submit</button>
+        </form>
 
         <main>
           <div>
@@ -71,7 +78,9 @@ function App() {
                 />
               ))
             ) : (
-              <h1>Not Found!</h1>
+              <h1 className="errMsg" role="status">
+                Not Found!
+              </h1>
             )}
           </div>
         </main>
