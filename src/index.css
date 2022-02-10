@@ -68,6 +68,13 @@ button {
   font-size: 0;
 }
 
+.nav-group {
+  display: flex;
+  justify-content: space-around;
+}
+.about-group p {
+}
+
 @media screen and (min-width: 630px) {
   header {
     font-size: 50px;
