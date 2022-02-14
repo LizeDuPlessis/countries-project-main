@@ -9,7 +9,6 @@ function CountryForm() {
   const [userSubmitSearch, setUserSubmitSearch] = useState("");
   const [showMore, setShowMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
 
   const handleShowMore = () => {
     setShowMore(!showMore);
@@ -18,7 +17,6 @@ function CountryForm() {
   const handleSubmitSearch = (e) => {
     e.preventDefault();
     const getNewCountries = async () => {
-      setError(false);
       setIsLoading(true);
       try {
         const res = await fetch(
@@ -26,11 +24,10 @@ function CountryForm() {
         );
         const data = await res.json();
         setCountries(data);
-      } catch (error) {
-        setError(true);
+      } catch (err) {
+        console.error(err);
       }
       setIsLoading(false);
-      // setError(true);
     };
 
     getNewCountries();
@@ -38,23 +35,23 @@ function CountryForm() {
 
   useEffect(() => {
     const getCountries = async () => {
-      setError(false);
       setIsLoading(true);
 
       try {
         const res = await fetch(url_all);
         const data = await res.json();
         setCountries(data);
-      } catch (error) {
-        setError(true);
+      } catch (err) {
+        console.error(err);
       }
-      // setError(true);
+
       setIsLoading(false);
     };
     getCountries();
   }, []);
 
-  console.log(error, "error");
+  if (isLoading) return <h1>Loading</h1>;
+
   return (
     <div>
       <div className="container">
@@ -79,10 +76,7 @@ function CountryForm() {
 
         <main>
           <div>
-            {isLoading ? (
-              <p>Loading...</p>
-            ) : (
-              countries &&
+            {countries.length > 0 ? (
               countries.map((country) => (
                 <CountryItems
                   key={country.id}
@@ -91,8 +85,9 @@ function CountryForm() {
                   showMore={showMore}
                 />
               ))
+            ) : (
+              <h1>No country for your search exist</h1>
             )}
-            {error && <h1>Something went wrong!</h1>}
           </div>
         </main>
       </div>
