@@ -30,6 +30,7 @@ function CountryForm() {
         setError(true);
       }
       setIsLoading(false);
+      // setError(true);
     };
 
     getNewCountries();
@@ -47,10 +48,13 @@ function CountryForm() {
       } catch (error) {
         setError(true);
       }
+      // setError(true);
       setIsLoading(false);
     };
     getCountries();
   }, []);
+
+  console.log(error, "error");
   return (
     <div>
       <div className="container">
@@ -75,14 +79,7 @@ function CountryForm() {
 
         <main>
           <div>
-            {/* {error && (
-              <h1 className="errMsg" role="status">
-                Not Found!
-              </h1>
-            )} */}
-            {error && error ? (
-              <h1>Sorry, not found!</h1>
-            ) : isLoading ? (
+            {isLoading ? (
               <p>Loading...</p>
             ) : (
               countries &&
@@ -95,6 +92,7 @@ function CountryForm() {
                 />
               ))
             )}
+            {error && <h1>Something went wrong!</h1>}
           </div>
         </main>
       </div>
