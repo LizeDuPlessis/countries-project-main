@@ -8,6 +8,8 @@ function CountryForm() {
   const [countries, setCountries] = useState([]);
   const [userSubmitSearch, setUserSubmitSearch] = useState("");
   const [showMore, setShowMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const handleShowMore = () => {
     setShowMore(!showMore);
@@ -15,31 +17,39 @@ function CountryForm() {
 
   const handleSubmitSearch = (e) => {
     e.preventDefault();
-    try {
-      const getNewCountries = async () => {
+    const getNewCountries = async () => {
+      setError(false);
+      setIsLoading(true);
+      try {
         const res = await fetch(
           `https://restcountries.com/v3.1/name/${userSubmitSearch}`
         );
         const data = await res.json();
         setCountries(data);
-      };
-      getNewCountries();
-    } catch (err) {
-      console.error(err);
-    }
+      } catch (error) {
+        setError(true);
+      }
+      setIsLoading(false);
+    };
+
+    getNewCountries();
   };
 
   useEffect(() => {
-    try {
-      const getCountries = async () => {
+    const getCountries = async () => {
+      setError(false);
+      setIsLoading(true);
+
+      try {
         const res = await fetch(url_all);
         const data = await res.json();
         setCountries(data);
-      };
-      getCountries();
-    } catch (err) {
-      console.error(err);
-    }
+      } catch (error) {
+        setError(true);
+      }
+      setIsLoading(false);
+    };
+    getCountries();
   }, []);
   return (
     <div>
@@ -65,7 +75,17 @@ function CountryForm() {
 
         <main>
           <div>
-            {countries.length > 0 ? (
+            {/* {error && (
+              <h1 className="errMsg" role="status">
+                Not Found!
+              </h1>
+            )} */}
+            {error && error ? (
+              <h1>Sorry, not found!</h1>
+            ) : isLoading ? (
+              <p>Loading...</p>
+            ) : (
+              countries &&
               countries.map((country) => (
                 <CountryItems
                   key={country.id}
@@ -74,10 +94,6 @@ function CountryForm() {
                   showMore={showMore}
                 />
               ))
-            ) : (
-              <h1 className="errMsg" role="status">
-                Not Found!
-              </h1>
             )}
           </div>
         </main>
